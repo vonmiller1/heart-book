@@ -247,9 +247,9 @@ class JaticAttack:
             tuple[Union[NDArray[np.float32], list[dict[str, Any]]], bool]: Updated y and is_object_detection.
         """
         # check if y is a list of dicts, as per object detection
-        if y is not None and not all(isinstance(i, dict) for i in y):
+        if y is not None and len(y) > 0 and not all(isinstance(i, dict) for i in y):
             y = np.array(y)
-        else:
+        elif y is not None and len(y) > 0:
             is_object_detection = True
         return y, is_object_detection
 
