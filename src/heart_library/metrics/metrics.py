@@ -217,6 +217,10 @@ class HeartAccuracyMetric:
             self._metric = MulticlassAccuracy(**kwargs)
         elif self._task == "multilabel":
             self._metric = MultilabelAccuracy(**kwargs)
+        else:
+            raise ValueError(
+                f"Unsupported accuracy task {self._task!r}; expected 'binary', 'multiclass', or 'multilabel'.",
+            )
         self.metadata = {"id": metadata_id if metadata_id is not None else str(uuid.uuid4())}
 
     def reset(self) -> None:
@@ -231,7 +235,7 @@ class HeartAccuracyMetric:
         """Add predictions and targets to metric's cache for later calculation.
 
         Args:
-            preds_batch (Sequence[NDArray[np.float32]]): edictions in numpy array format.
+            preds_batch (Sequence[NDArray[np.float32]]): predictions in numpy array format.
             targets_batch (Sequence[NDArray[np.float32]]): groundtruth targets in numpy array format.
         """
         import torch
@@ -308,7 +312,8 @@ class RobustnessBiasMetric:
             np.argmax(np.asarray(targets_batch), axis=1).ravel() != np.argmax(np.asarray(preds_batch), axis=1).ravel()
         ).astype(int)
 
-        taus = np.linspace(0, max(errors) + 1, self._interval)
+        error_max = float(np.max(errors)) if errors.size else 0.0
+        taus = np.linspace(0, error_max + 1, self._interval)
         series: dict = {}
         for tau in taus:
             for label in range(len(self._labels)):
