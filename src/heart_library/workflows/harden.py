@@ -38,7 +38,7 @@ def harden(
     hardened_model: Optional[DRSJaticPyTorchClassifier] = None
     # switch on the type of defense
     # is a preprocessing defense,
-    if defense and defense["class"] == "DRSJaticPyTorchClassifier":
+    if defense is not None and defense.get("class") == "DRSJaticPyTorchClassifier":
         if data is None:
             raise ValueError("Data must not be None.")
         if isinstance(model.model, VisionTransformer):
