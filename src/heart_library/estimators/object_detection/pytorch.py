@@ -612,6 +612,8 @@ class JaticPyTorchObjectDetector(PyTorchObjectDetector):
         """
         # convert to ART supported type
         images, _, _ = process_inputs_for_art(data)
+        if images is None or np.asarray(images).size == 0:
+            raise ValueError("Object detection input must contain at least one image.")
 
         # make prediction
         output = self._detector.predict(images)
