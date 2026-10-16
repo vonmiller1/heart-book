@@ -129,6 +129,7 @@ class CreateObjectDetectionPatch(Workflow):
         ## Setup the dataset
         coco_label_url = "https://gist.githubusercontent.com/tersekmatija/9d00c4683d52d94cf348acae29e8db1a/raw/8d1b042e7dd6061c760422f51e8e8488c6ad68c7/coco-labels-91.txt"
         response = requests.get(coco_label_url, timeout=90)
+        response.raise_for_status()
         data = response.text
         coco_labels = ["background"] + data.splitlines()
 
