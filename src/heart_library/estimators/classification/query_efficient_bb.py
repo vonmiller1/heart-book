@@ -85,6 +85,10 @@ class HeartQueryEfficientGradientEstimationClassifier(
             round_samples (float, optional): The resolution of the input domain to round the data to,
                 e.g., 1.0, or 1/255. Set to 0 to disable. Defaults to 0.0.
         """
+        if num_basis < 1:
+            raise ValueError("num_basis must be at least 1.")
+        if sigma <= 0:
+            raise ValueError("sigma must be positive.")
         super().__init__(classifier=classifier, num_basis=num_basis, sigma=sigma, round_samples=round_samples)
 
     def predict(
