@@ -315,8 +315,8 @@ def process_inputs_for_art(
     data = __handle_hf_torch_data(data)
 
     conditions: dict[bool, Any] = {
-        # if data is a Sequence
-        isinstance(data, Sequence): __handle_sequence,
+        # if data is a Sequence (exclude str/bytes, which are also Sequence)
+        isinstance(data, Sequence) and not isinstance(data, (str, bytes, bytearray)): __handle_sequence,
         # if Tuple of batched data, convert to np.ndarray
         isinstance(data, tuple) and isinstance(data[0], (list, np.ndarray, Tensor)): __handle_tuple,
         # if dict, assume np.ndarray and set values if present.
@@ -524,6 +524,8 @@ def __handle_dict_labels(data: dict[str, Any], targets: Any) -> NDArray[np.float
     """
     if "labels" in data:
         targets = data["labels"]
+        if not targets:
+            return None
 
         # for object detection, convert to correct format if exist
         if hasattr(targets[0], "boxes") and hasattr(targets[0], "scores"):
@@ -553,6 +555,8 @@ def __handle_tuple_targets(targets: Any) -> NDArray[np.float32]:  # noqa ANN401
     Returns:
         NDArray[np.float32]: Targets in np array format.
     """
+    if targets is None or (hasattr(targets, "__len__") and len(targets) == 0):
+        return None
     # for object detection, convert to correct format if exist
     if hasattr(targets[0], "boxes") and hasattr(targets[0], "scores"):
         targets = [
@@ -740,6 +744,8 @@ def __handle_dataset_targets(targets: Any) -> Any:  # noqa ANN401
     Returns:
         Any: Targets in NDArray or list if object detection.
     """
+    if not targets:
+        return None
     # for object detection, convert to correct format if exist
     if hasattr(targets[0], "boxes") and hasattr(targets[0], "scores"):
         targets = [
