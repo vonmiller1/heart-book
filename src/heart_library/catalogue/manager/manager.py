@@ -10,7 +10,7 @@ from numpy.typing import NDArray
 
 @dataclass
 class AugmentationMetadata:
-    """Augmetnation metadata"""
+    """Augmentation metadata"""
 
     augmentation_name: str
     max_iter: int
@@ -20,7 +20,6 @@ class AugmentationMetadata:
     scale_min: float
     scale_max: float
     distortion_scale_max: float
-    learning_rate: float
     patch_shape: tuple[int, int, int]
     patch_location: tuple[int, int]
     patch_type: str
