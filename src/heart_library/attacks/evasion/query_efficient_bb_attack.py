@@ -123,6 +123,10 @@ class HeartQueryEfficientBlackBoxAttack(EvasionAttack):
             minimal (bool, optional): Indicates if computing the minimal perturbation (True). Defaults to False.
         """
         super().__init__(estimator=estimator, **kwargs)
+        if num_basis < 1:
+            raise ValueError("num_basis must be at least 1.")
+        if sigma <= 0:
+            raise ValueError("sigma must be positive.")
 
         query_efficient_estimator = HeartQueryEfficientGradientEstimationClassifier(
             estimator,
