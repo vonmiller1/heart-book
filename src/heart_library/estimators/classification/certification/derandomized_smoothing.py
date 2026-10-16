@@ -4,6 +4,7 @@ import uuid
 from collections.abc import Sequence
 from typing import Any, Optional
 
+import numpy as np
 from art.estimators.certification.derandomized_smoothing import PyTorchDeRandomizedSmoothing
 from maite.protocols import ArrayLike
 
@@ -86,6 +87,8 @@ class DRSJaticPyTorchClassifier(PyTorchDeRandomizedSmoothing):
         """
         # transform the data for ART
         x_train, y_train, _ = process_inputs_for_art(training_data)
+        if x_train is None or np.asarray(x_train).size == 0:
+            raise ValueError("training_data must contain at least one sample for certification.")
 
         # apply the fit for certification
         self.fit(x=x_train, y=y_train, **kwargs)
