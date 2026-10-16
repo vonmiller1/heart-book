@@ -29,7 +29,7 @@ LOGGING: dict[str, Any] = {
         },
     },
     "loggers": {
-        "heart": {"handlers": ["default"]},
+        "heart_library": {"handlers": ["default"]},
         "tests": {"handlers": ["test"], "level": "INFO", "propagate": True},
     },
 }
