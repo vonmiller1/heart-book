@@ -40,7 +40,11 @@ class SearchPatches(Workflow):
         patches = []
         if len(runs) > 0:
             for _, run in runs.iterrows():
-                patch = load_image(f"{run.artifact_uri}/training_patch.png")
+                artifact_uri = run.get("artifact_uri")
+                if not artifact_uri or (isinstance(artifact_uri, float) and np.isnan(artifact_uri)):
+                    logger.warning("Skipping MLflow run without artifact_uri.")
+                    continue
+                patch = load_image(f"{artifact_uri}/training_patch.png")
                 patches.append(patch)
 
         return runs, patches
