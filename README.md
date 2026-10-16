@@ -1,47 +1,70 @@
-# HEART
+# HEART (heart-book)
 
-**Hardened Extension of the Adversarial Robustness Toolbox (HEART)** is an open-source Python library for evaluating and
-improving the robustness of machine-learning systems. Built on the
-[Adversarial Robustness Toolbox (ART)](https://github.com/Trusted-AI/adversarial-robustness-toolbox), HEART provides a
-focused set of tools and guidance for AI Test & Evaluation (T&E) workflows.
+**Hardened Extension of the Adversarial Robustness Toolbox (HEART)** is a Python library for evaluating and improving the robustness of machine-learning systems in AI test and evaluation (T&E) workflows. It extends the [Adversarial Robustness Toolbox (ART)](https://github.com/Trusted-AI/adversarial-robustness-toolbox) with MAITE-aligned APIs, catalogue workflows, and practical guides.
 
 [![PyPI version](https://img.shields.io/pypi/v/heart-library)](https://pypi.org/project/heart-library/)
 ![Supported Python versions](https://img.shields.io/badge/python-3.9%E2%80%933.11-blue)
 [![Documentation](https://img.shields.io/badge/docs-Read%20the%20Docs-brightgreen)](https://heart-library.readthedocs.io/)
 
-## What HEART provides
+## Overview
 
-- Adversarial attacks, estimators, and evaluation metrics for model T&E.
-- Tools for both image-classification and object-detection workflows.
-- Alignment with [MAITE](https://github.com/mit-ll-ai-technology/maite) protocols to support interoperable evaluation.
-- Tutorials, step-by-step guides, and reference material for applying HEART methods.
-- A [Gradio application](gradio/) for users who prefer a low-code interface.
+HEART helps teams run adversarial attacks, certified defenses, and robustness metrics against image-classification and object-detection models. The package integrates Hugging Face datasets, PyTorch estimators, optional MLflow catalogue tracking, and a Gradio demo for interactive exploration. This repository mirrors the public HEART release; upstream development is described in [contributing.md](contributing.md).
 
-HEART is intended to support AI security assessment; it does not by itself guarantee that a model is secure or robust.
+## Features
 
-## Installation
+- JATIC/MAITE-compatible attack wrappers (`JaticAttack`) and evasion attacks (PGD extensions, HopSkipJump, laser, query-efficient black-box, adversarial patches).
+- PyTorch classifiers and object detectors with standardized input conversion via `process_inputs_for_art`.
+- Robustness metrics (accuracy under perturbation, MAP for detection, robustness bias).
+- Catalogue workflows for patch create, optimize, search, and evaluate (MLflow optional extra).
+- Hardening workflow with derandomized smoothing certification for supported ViT models.
+- Example notebooks under `notebooks/` and interactive UI under `gradio/`.
 
-HEART supports Python 3.9–3.11. Install the core package from PyPI:
+## Tech stack
+
+| Area | Technologies |
+| --- | --- |
+| Language | Python 3.9–3.11 |
+| Core ML | NumPy, scikit-learn, PyTorch (optional), torchvision, timm, transformers |
+| Adversarial ML | adversarial-robustness-toolbox, maite |
+| Data | Hugging Face `datasets`, Pillow |
+| Catalogue (optional) | MLflow |
+| UI (optional) | Gradio |
+| Packaging | Poetry (`pyproject.toml`) |
+
+## Prerequisites
+
+- Python **3.9**, **3.10**, or **3.11** (see `pyproject.toml`).
+- For PyTorch workflows: install the `pytorch` extra (see below).
+- For catalogue workflows: install the `mlflow` extra and provide a writable local catalogue directory.
+
+## Getting started
+
+Clone this repository (or the canonical upstream):
+
+```bash
+git clone https://github.com/vonmiller1/heart-book.git
+cd heart-book
+```
+
+Install with pip from PyPI (recommended for use):
 
 ```bash
 python -m pip install heart-library
-```
-
-For workflows that use PyTorch, install the corresponding optional dependencies:
-
-```bash
 python -m pip install "heart-library[pytorch]"
 ```
 
-To install the latest source from the canonical public repository:
+Install from source with Poetry (development):
 
 ```bash
-git clone https://github.com/IBM/heart-library.git
-cd heart-library
-python -m pip install .
+poetry install
+poetry install --extras pytorch
 ```
 
-After installation, confirm that the package is available:
+Optional dependency groups are defined under `[tool.poetry.extras]` in `pyproject.toml` (for example `object_detection`, `mlflow`, `notebooks`, `docs`).
+
+## Running locally
+
+Verify the install:
 
 ```python
 import heart_library
@@ -49,39 +72,66 @@ import heart_library
 print(heart_library.__version__)
 ```
 
-Refer to the [installation guide](https://heart-library.readthedocs.io/en/latest/quick_start/install_heart.html) for
-development-environment setup and additional dependencies.
+Run the Gradio demo (requires PyTorch and Gradio dependencies):
 
-## Get started
+```bash
+python gradio/app.py
+```
 
-- [Introduction to HEART](https://heart-library.readthedocs.io/en/latest/quick_start/intro_heart.html)
-- [Image-classification how-to guides](https://heart-library.readthedocs.io/en/latest/how_to_guides/image_classification/index.html)
-- [Object-detection how-to guides](https://heart-library.readthedocs.io/en/latest/how_to_guides/object_detection/index.html)
-- [Tutorials and reference materials](https://heart-library.readthedocs.io/)
-- [Example notebooks](notebooks/)
+Open the URL printed in the terminal (default Gradio port is typically **7860**).
+
+Build documentation locally (optional `docs` extra):
+
+```bash
+cd docs
+make html
+```
+
+## Testing
+
+Tests are not executed as part of this documentation pass. To run the suite after installing dev dependencies:
+
+```bash
+poetry install --with dev
+poetry run pytest
+```
+
+Configuration lives in `[tool.pytest.ini_options]` inside `pyproject.toml`.
 
 ## Project structure
 
 | Path | Contents |
 | --- | --- |
-| `src/heart_library/attacks/` | Adversarial attack implementations |
-| `src/heart_library/estimators/` | Estimator integrations for model evaluation |
-| `src/heart_library/metrics/` | Model and robustness evaluation metrics |
-| `src/heart_library/catalogue/` | Workflow and catalogue integrations |
-| `docs/` | HEART user and reference documentation |
+| `src/heart_library/` | Library source (attacks, estimators, metrics, catalogue, workflows) |
+| `src/heart_library/attacks/` | Attack implementations and `JaticAttack` wrapper |
+| `src/heart_library/estimators/` | Classification and object-detection estimators |
+| `src/heart_library/metrics/` | Evaluation metrics |
+| `src/heart_library/catalogue/` | MLflow-backed catalogue managers and workflows |
+| `docs/` | Sphinx documentation sources |
 | `notebooks/` | Example notebooks |
 | `gradio/` | Gradio application |
-| `tests/` | Automated test suite |
+| `tests/` | Pytest suite |
 
-## Documentation and contributing
+## Configuration
 
-The complete documentation is published at [heart-library.readthedocs.io](https://heart-library.readthedocs.io/).
-For issue reports, feature requests, and contribution guidance, see [contributing.md](contributing.md).
+HEART stores local configuration under `~/.heart/config.json` (or `/tmp/.heart` when the home directory is not writable). Keys include:
 
-## License and acknowledgement
+| Variable / setting | Purpose |
+| --- | --- |
+| `HEART_DATA_PATH` | Writable directory for temporary artefacts (patches, MLflow staging files). Override with `heart_library.config.set_data_path()`. |
+
+Do not commit secrets or API keys; catalogue paths should point to local directories you control.
+
+## Deployment
+
+There is no Dockerfile in this repository. Publish releases via Poetry/pip using `pyproject.toml` version metadata. User-facing documentation is hosted on [Read the Docs](https://heart-library.readthedocs.io/).
+
+## Contributing
+
+See [contributing.md](contributing.md) for issue reporting, coding standards, and the development workflow. Use focused commits and open pull requests against the public GitHub mirror.
+
+## License
 
 HEART is distributed under the [MIT License](LICENSE.txt).
 
-This material is based upon work supported by the Chief Digital and Artificial Intelligence Office under Contract No.
-W519TC-23-9-2037. The views and conclusions contained herein are those of the author(s) and should not be interpreted
-as necessarily representing the official policies or endorsements, either expressed or implied, of the U.S. Government.
+This material is based upon work supported by the Chief Digital and Artificial Intelligence Office under Contract No. W519TC-23-9-2037. The views and conclusions contained herein are those of the author(s) and should not be interpreted as necessarily representing the official policies or endorsements, either expressed or implied, of the U.S. Government.
