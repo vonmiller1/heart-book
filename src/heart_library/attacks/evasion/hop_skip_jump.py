@@ -42,8 +42,8 @@ def _softmax(x: NDArray[np.float32]) -> NDArray[np.float32]:
 
 
 class HeartHopSkipJump(HopSkipJump):  # type: ignore
-    """Extension of ART's implementation of a generic laser attack case which
-    supports channel first images.
+    """Extension of ART's HopSkipJump attack with HEART-specific batching and
+    channel-first image support.
 
     Args:
         HopSkipJump (_type_): HopSkipJump object to be wrapped.
