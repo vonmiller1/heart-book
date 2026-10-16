@@ -1,5 +1,6 @@
 """Abstract HEART Workflow"""
 
+import os
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 
@@ -14,10 +15,10 @@ class Workflow(ABC):
         local_catalogue_path: Optional[str] = None,
     ) -> None:
         """Initialize the Workflow with a Catalogue Manager."""
-        if local_catalogue_path is not None:
-            self._manager = MLFlowClient(local_catalogue_path=local_catalogue_path)
-        else:
+        if local_catalogue_path is None or not str(local_catalogue_path).strip():
             raise ValueError("A local patch catalogue path must be given.")
+        catalogue_path = os.path.abspath(os.path.expanduser(local_catalogue_path.strip()))
+        self._manager = MLFlowClient(local_catalogue_path=catalogue_path)
 
     @abstractmethod
     def run(self, *args: Any, **kwargs: Any) -> bool:  # noqa: ANN401
