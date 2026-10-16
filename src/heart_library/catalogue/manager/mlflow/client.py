@@ -60,19 +60,25 @@ class MLFlowClient(CatalogueManager):
             mlflow.end_run()
             self._run = None
 
+    def _artifact_staging_path(self, artifact_path: str, suffix: str) -> str:
+        """Build a safe path under HEART_DATA_PATH for temporary MLflow artefacts."""
+        safe_name = os.path.basename(artifact_path.replace("\\", "/"))
+        if not safe_name or safe_name in {".", ".."}:
+            raise ValueError(f"Invalid artifact path: {artifact_path!r}")
+        return os.path.join(HEART_DATA_PATH, f"{safe_name}{suffix}")
+
     def _save_as_artifact(self, item: Optional[Union[NDArray, dict, Image.Image]], artifact_path: str) -> None:
         """Save as an artifact"""
         if item is not None:
-            local_path = f"{HEART_DATA_PATH}/{artifact_path}"
             if isinstance(item, np.ndarray):
-                local_path = f"{local_path}.npy"
+                local_path = self._artifact_staging_path(artifact_path, ".npy")
                 np.save(local_path, item)
             elif isinstance(item, dict):
-                local_path = f"{local_path}.yaml"
-                with open(local_path, "w") as file:
+                local_path = self._artifact_staging_path(artifact_path, ".yaml")
+                with open(local_path, "w", encoding="utf-8") as file:
                     yaml.dump(item, file)
             elif isinstance(item, Image.Image):
-                local_path = f"{local_path}.png"
+                local_path = self._artifact_staging_path(artifact_path, ".png")
                 item.save(local_path)
             mlflow.log_artifact(local_path=local_path)
             os.remove(local_path)
