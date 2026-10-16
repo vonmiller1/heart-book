@@ -1,5 +1,5 @@
-HEART T&E Pathway Flowchart
-===========================
+HEART Adversarial Evaluation Pathways
+=====================================
 
 This guide has been prepared to help identify effective and efficient pathways for test and evaluation of your AI models.
 
