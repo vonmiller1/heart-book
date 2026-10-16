@@ -1,11 +1,11 @@
-'''
-HEART Gradio Example App
+"""
+HEART Gradio example app.
 
-To run: 
-- clone the repository
-- execute: gradio examples/gradio_app.py or python examples/gradio_app.py
-- navigate to local URL e.g. http://127.0.0.1:7860
-'''
+To run:
+- install HEART with PyTorch and Gradio dependencies
+- from the repository root: python gradio/app.py
+- open the local URL printed in the terminal (for example http://127.0.0.1:7860)
+"""
 
 import torch
 import numpy as np
