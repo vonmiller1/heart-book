@@ -21,4 +21,4 @@ class EvaluateObjectDetectionPatch(Workflow):
     def run(self) -> bool:
         """Run the patch evaluation workflow."""
         logger.info("Running patch evaluation workflow")
-        raise NotImplementedError
+        raise NotImplementedError("EvaluateObjectDetectionPatch.run is not implemented yet.")
