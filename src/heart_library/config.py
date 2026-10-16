@@ -47,7 +47,9 @@ def set_data_path(path: str) -> None:
     Raises:
         OSError: if path cannot be read from.
     """
-    expanded_path = os.path.abspath(os.path.expanduser(path))
+    if not path or not str(path).strip():
+        raise ValueError("path must be a non-empty string")
+    expanded_path = os.path.abspath(os.path.expanduser(path.strip()))
     os.makedirs(expanded_path, exist_ok=True)
     if not os.access(expanded_path, os.R_OK):  # pragma: no cover
         raise OSError(f"path {expanded_path} cannot be read from")
@@ -76,7 +78,8 @@ if os.path.exists(_config_path):
                 except OSError:
                     logger.warning("Unable to update configuration file", exc_info=True)
 
-    except ValueError:  # pragma: no cover
+    except (ValueError, json.JSONDecodeError):  # pragma: no cover
+        logger.warning("Ignoring invalid HEART configuration at %s", _config_path, exc_info=True)
         _config = {}
 
 if not os.path.exists(_folder):
