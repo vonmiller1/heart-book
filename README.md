@@ -1,65 +1,87 @@
-# Hardened Extension of the Adversarial Robustness Toolbox (HEART)
+# HEART
 
-![Static Badge](https://img.shields.io/badge/python-3.9%20--%203.11-blue "Python 3.9 - 3.11 version support.")
+**Hardened Extension of the Adversarial Robustness Toolbox (HEART)** is an open-source Python library for evaluating and
+improving the robustness of machine-learning systems. Built on the
+[Adversarial Robustness Toolbox (ART)](https://github.com/Trusted-AI/adversarial-robustness-toolbox), HEART provides a
+focused set of tools and guidance for AI Test & Evaluation (T&E) workflows.
 
-HEART is a Python extension library for Machine Learning Security that builds on the popular Adversarial Robustness algorithms within the [Adversarial Robustness Toolbox (ART)](https://github.com/Trusted-AI/adversarial-robustness-toolbox). The extension library allows the user to leverage core ART algorithms while providing additional benefits to AI Test & Evaluation (T&E) engineers. HEART documentation can be found [here](https://heart-library.readthedocs.io/).
+[![PyPI version](https://img.shields.io/pypi/v/heart-library)](https://pypi.org/project/heart-library/)
+![Supported Python versions](https://img.shields.io/badge/python-3.9%E2%80%933.11-blue)
+[![Documentation](https://img.shields.io/badge/docs-Read%20the%20Docs-brightgreen)](https://heart-library.readthedocs.io/)
 
-- Support for T&E of models for Department of Defense use cases
-- Alignment to [MAITE](https://github.com/mit-ll-ai-technology/maite) protocols for seamless T&E workflows
-- Essential subset of adversarial robustness methods for targeted AI security coverage
-- Quality assurance of model assessments in the form of metadata
-- In-depth support for users based on codified T&E expert experience in form of guides and examples
-- Front-end application for low-code users: HEART Gradio Application
+## What HEART provides
 
+- Adversarial attacks, estimators, and evaluation metrics for model T&E.
+- Tools for both image-classification and object-detection workflows.
+- Alignment with [MAITE](https://github.com/mit-ll-ai-technology/maite) protocols to support interoperable evaluation.
+- Tutorials, step-by-step guides, and reference material for applying HEART methods.
+- A [Gradio application](gradio/) for users who prefer a low-code interface.
+
+HEART is intended to support AI security assessment; it does not by itself guarantee that a model is secure or robust.
 
 ## Installation
 
-### From Python Packaging Index (PyPI)
+HEART supports Python 3.9–3.11. Install the core package from PyPI:
 
-To install the latest version of HEART from PyPI, run:
-
-```shell
-pip install heart-library
+```bash
+python -m pip install heart-library
 ```
 
-### From IBM GitHub Source
+For workflows that use PyTorch, install the corresponding optional dependencies:
 
-To install the latest version of HEART from the [heart-library public GitHub](https://github.com/IBM/heart-library), run:
+```bash
+python -m pip install "heart-library[pytorch]"
+```
 
-```shell
+To install the latest source from the canonical public repository:
+
+```bash
 git clone https://github.com/IBM/heart-library.git
 cd heart-library
-pip install .
+python -m pip install .
 ```
 
-### (Optional) Development Environment via Poetry
+After installation, confirm that the package is available:
 
-In some cases, it may be beneficial for developers to set up an environment from a reproducible source of truth.  This environment is useful for developers that wish to work within a pull request or leverage the same development conditions used by HEART contributors.  Please follow the instructions for installation via Poetry within the official HEART repository:
+```python
+import heart_library
 
-- [Poetry Installation Instructions](https://github.com/IBM/heart-library/blob/main/poetry_installation.md)
+print(heart_library.__version__)
+```
 
-## Getting Started With HEART
+Refer to the [installation guide](https://heart-library.readthedocs.io/en/latest/quick_start/install_heart.html) for
+development-environment setup and additional dependencies.
 
-IBM has published a catalog of notebooks designed to assist developers of all skill levels with the process of getting started utilizing HEART in their AI T&E workflows.  These Jupyter notebooks can be accessed within the official heart-library GitHub repository:
+## Get started
 
-- [HEART Jupyter Notebooks](https://github.com/IBM/heart-library/tree/main/notebooks)
+- [Introduction to HEART](https://heart-library.readthedocs.io/en/latest/quick_start/intro_heart.html)
+- [Image-classification how-to guides](https://heart-library.readthedocs.io/en/latest/how_to_guides/image_classification/index.html)
+- [Object-detection how-to guides](https://heart-library.readthedocs.io/en/latest/how_to_guides/object_detection/index.html)
+- [Tutorials and reference materials](https://heart-library.readthedocs.io/)
+- [Example notebooks](notebooks/)
 
-## HEART Modules
+## Project structure
 
-The HEART library is organized into three primary modules: attacks, estimators, and metrics.
+| Path | Contents |
+| --- | --- |
+| `src/heart_library/attacks/` | Adversarial attack implementations |
+| `src/heart_library/estimators/` | Estimator integrations for model evaluation |
+| `src/heart_library/metrics/` | Model and robustness evaluation metrics |
+| `src/heart_library/catalogue/` | Workflow and catalogue integrations |
+| `docs/` | HEART user and reference documentation |
+| `notebooks/` | Example notebooks |
+| `gradio/` | Gradio application |
+| `tests/` | Automated test suite |
 
-### heart_library.attacks
+## Documentation and contributing
 
-> The HEART attacks module contains implementations of attack algorithms for generating adversarial examples and evaluating model robustness.
+The complete documentation is published at [heart-library.readthedocs.io](https://heart-library.readthedocs.io/).
+For issue reports, feature requests, and contribution guidance, see [contributing.md](contributing.md).
 
-### heart_library.estimators
+## License and acknowledgement
 
-> The HEART estimators module contains classes that wrap and extend the evaluated model to make it compatible with attacks and metrics.
+HEART is distributed under the [MIT License](LICENSE.txt).
 
-### heart_library.metrics
-
-> The HEART metrics module implements industry standard, commonly-used T&E metrics for model evaluation.
-
-## Acknowledgement
-
-This material is based upon work supported by the Chief Digital and Artificial Intelligence Office under Contract No. W519TC-23-9-2037. The views and conclusions contained herein are those of the author(s) and should not be interpreted as necessarily representing the official policies or endorsements, either expressed or implied, of the U.S. Government.
+This material is based upon work supported by the Chief Digital and Artificial Intelligence Office under Contract No.
+W519TC-23-9-2037. The views and conclusions contained herein are those of the author(s) and should not be interpreted
+as necessarily representing the official policies or endorsements, either expressed or implied, of the U.S. Government.
